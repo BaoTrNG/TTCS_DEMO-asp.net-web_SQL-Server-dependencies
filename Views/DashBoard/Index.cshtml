@@ -1,0 +1,55 @@
+﻿
+@{
+    
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+           <div>          
+                <div class="x_title">
+                    <h2>Bảng Giá</h2>
+                    <button onclick="myFunction()">Toggle dark mode</button>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">             
+                      <p>&nbsp; &nbsp;   </p>
+                    <table class="table table-bordered table-hover table-sm  " id="tblOrder">
+                        <thead class="thead-light">
+                            <tr class="text-center">
+                                <th></th>
+                                <th rowspan="2">Mã CK</th>  
+                                <th colspan="6">Bên Mua</th>
+                                <th colspan="2">Khớp Lệnh</th>
+                                <th colspan="6">Bên Bán</th>
+                                <th rowspan="2">Tổng KL</th>                      
+                            </tr>
+                            <tr class="text-center" >
+                                <th>STT</th>
+                                <th>Giá 3 </th>
+                                <th>KL 3 </th>
+                                <th>Giá 2</th>
+                                <th>KL 2</th>
+                                <th>Giá 1</th>
+                                <th>KL1</th>
+                                <th>Giá </th>
+                                <th>KL</th>
+                                <th>Giá 1</th>
+                                <th>KL</th>
+                                <th>Giá 2</th>
+                                <th>KL 2</th>
+                                <th>Giá 3</th>
+                                <th>KL 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           
+                        </tbody>
+                    </table>
+                 </div>
+           </div>
+
+@section Scripts{
+    <script src="~/lib/microsoft-signalr/signalr.js"></script>
+    <script src="~/lib/microsoft-signalr/signalr.min.js"></script>
+   <script src="~/js/Dashhub.js"></script>
+  
+}

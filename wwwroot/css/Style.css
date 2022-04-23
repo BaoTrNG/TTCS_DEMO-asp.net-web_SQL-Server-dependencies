@@ -1,0 +1,60 @@
+﻿
+h2{
+    color:red;
+}
+
+
+th {
+    font-family: "Trebuchet MS", Arial, Verdana;
+    font-size: 13px;
+    //color: white;
+   
+}
+
+thead > tr:first-child {
+    color: yellow;
+}
+
+thead > tr:nth-child(2) {
+    color: white;
+}
+
+tr {
+   
+    font-family: "Trebuchet MS", Arial, Verdana;
+    text-align: center;
+    font-size: 13px;
+  //  color: rgba(255, 0, 0, 0.929);
+}
+
+
+
+.table-hover tbody tr:hover td {
+    background: rgba(205, 197, 205, .3);
+    //color: rgba(255, 0, 0, 0.929);
+}
+
+.table-striped > tbody > td:nth-child(odd) {
+    background-color: #f2f2f2;
+ 
+}
+
+tbody > tr:nth-child(odd) {
+    background-color: #2A2A2A;
+    
+}
+
+tbody > tr > td:first-child, tbody > tr > td:nth-child(2) {
+    color: yellow;
+}
+
+
+tbody > tr > td:nth-child(n+3) {
+    color: red;
+}
+
+tbody > tr > td:nth-child(17) {
+    color: yellow;
+}
+
+
