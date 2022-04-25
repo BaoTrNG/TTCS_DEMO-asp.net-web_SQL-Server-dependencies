@@ -1,0 +1,154 @@
+USE [ChungKhoan]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_KhopLenhLienTuc]    Script Date: 4/25/2022 7:19:32 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[sp_KhopLenhLienTuc]
+	 @InputMaCoPhieu NVARCHAR( 10), 
+	 @InputNgay NVARCHAR( 10),  
+	 @InputLoaiGiaoDich CHAR, 
+	 @InputSoLuong INT, 
+	 @InputGiaDat FLOAT 
+AS
+    declare @temp INT = @InputSoLuong
+	SET DATEFORMAT DMY
+	DECLARE @CursorVariable CURSOR ,
+			@ID int, 
+			@NgayDat NVARCHAR( 10), 
+			@SoLuong INT, 
+			@GiaDat FLOAT,  
+			@soluongkhop INT, 
+			@giakhop FLOAT
+
+	IF (@InputLoaiGiaoDich='B')
+		EXEC CursorLoaiGD @CursorVariable OUTPUT, @InputMaCoPhieu,@InputNgay, 'M'
+	ELSE 
+		EXEC CursorLoaiGD  @CursorVariable OUTPUT, @InputMaCoPhieu,@InputNgay, 'B'
+  
+	FETCH NEXT FROM @CursorVariable  INTO @ID, @NgayDat , @SoLuong , @GiaDat 
+	WHILE (@@FETCH_STATUS <> -1 AND @InputSoLuong >0)
+	BEGIN
+	 IF  (@InputLoaiGiaoDich='B' )-- mình đang muốn Bán
+		  IF  (@InputGiaDat <= @GiaDat) -- nên mình sẽ tìm những lệnh mua có giá cao nhất trước
+	      BEGIN
+		   print ('@InputGiaDat <= @GiaDat')
+			IF (@InputSoLuong > @SoLuong)
+			BEGIN
+			print('@InputSoLuong > @SoLuong')
+				SET @soluongkhop = @SoLuong
+				SET @giakhop = @GiaDat
+				SET @InputSoLuong = @InputSoLuong - @SoLuong
+
+				-- cập nhật dữ liệu tại record mà cursor đang đứng
+				UPDATE dbo.LenhDat
+				SET SoLuong = 0,
+					TRANGTHAILENH = N'Khớp Hết'
+				WHERE CURRENT OF @CursorVariable 
+
+			END
+
+			ELSE if (@InputSoLuong = @SoLuong)-- (@InputSoLuong =< @SoLuong )
+			BEGIN
+			   SET @soluongkhop = @InputSoLuong
+			   SET @giakhop = @GiaDat
+
+			   UPDATE dbo.LenhDat  
+			   SET SoLuong = SoLuong - @InputSoLuong,
+					TRANGTHAILENH = N'Khớp Hết'
+			   WHERE CURRENT OF @CursorVariable
+			   SET @InputSoLuong = 0
+
+			END
+			ELSE 
+			BEGIN
+			   SET @soluongkhop = @InputSoLuong
+			   SET @giakhop = @GiaDat
+
+			   UPDATE dbo.LenhDat  
+			   SET SoLuong = SoLuong - @InputSoLuong,
+					TRANGTHAILENH = N'Khớp Một Phần1'
+			   WHERE CURRENT OF @CursorVariable
+			   SET @InputSoLuong = 0
+
+			END
+		 -- Cập nhật table LENHKHOP
+		 print @ID
+		 INSERT INTO dbo.LenhKhop(NgayKhop,SoLuongKhop,GiaKhop,idLenhDat)
+		 VALUES (GETDATE(),@soluongkhop,@giakhop, @ID ) 
+		
+		 END -- end IF (@InputGiaDat <= @GiaDat)
+		 ELSE 
+		 begin
+		  print('else')
+			GOTO THOAT
+			end
+
+	 ELSE --  (@InputLoaiGiaoDich='M' ) 
+		   IF( @InputGiaDat >= @GiaDat )-- mình đang mua vào (@Input) nên mình sẽ tìm những lệnh bán có giá thấp trước
+		   BEGIN
+			  IF( @InputSoLuong > @SoLuong)
+			  BEGIN
+				  SET @soluongkhop = @SoLuong
+				  SET @giakhop = @GiaDat
+				  SET @InputSoLuong = @InputSoLuong - @SoLuong
+
+				  UPDATE dbo.LenhDat
+				  SET SoLuong = 0,
+					TRANGTHAILENH = N'Khớp Hết3'
+				  WHERE CURRENT OF @CursorVariable
+			  END
+
+			  ELSE IF (@InputSoLuong = @SoLuong) -- (@InputSoLuong < @SoLuong )
+			  BEGIN
+				 SET @soluongkhop = @InputSoLuong
+				 SET @giakhop = @GiaDat
+				 UPDATE dbo.LenhDat
+				 SET SoLuong = SoLuong - @InputSoLuong,
+					TRANGTHAILENH = N'Khớp Hết'
+				 WHERE CURRENT OF @CursorVariable
+				 SET @InputSoLuong = 0
+			  END
+
+			  ELSE
+			  begin 
+			    SET @soluongkhop = @InputSoLuong
+			   SET @giakhop = @GiaDat
+
+			   UPDATE dbo.LenhDat  
+			   SET SoLuong = SoLuong - @InputSoLuong,
+					TRANGTHAILENH = N'Khớp Một Phần1'
+			   WHERE CURRENT OF @CursorVariable
+			   SET @InputSoLuong = 0
+			  end
+
+			  -- Cập nhật table LENHKHOP
+			  INSERT INTO dbo.LenhKhop(NgayKhop,SoLuongKhop,GiaKhop,idLenhDat)
+			  VALUES (GETDATE(),@soluongkhop,@giakhop, @ID )
+		   END
+		   ELSE
+			 GOTO THOAT
+	   FETCH NEXT FROM @CursorVariable INTO @ID,  @NgayDat , @SoLuong , @GiaDat -- đọc dòng kế tiếp để xử lý
+	END
+THOAT:
+	IF(@InputSoLuong = @temp)-- đã khớp nhưng vẫn còn cổ phiểu | không có lệnh nào để khớp thì ghi lại vào bảng chờ lệnh khác gửi tới để khớp
+		BEGIN
+			INSERT INTO dbo.LenhDat(MACK, NgayDat, LOAIGD, LoaiLenh, SoLuong, GiaDat, TRANGTHAILENH)
+			VALUES(@InputMaCoPhieu, GETDATE(), @InputLoaiGiaoDich, N'LO', @InputSoLuong, @InputGiaDat, N'Chờ Khớp2')
+		END
+    
+	ELSE if (@InputSoLuong = 0)
+		BEGIN 
+			-- nếu lệnh của mình (@Input) đã được khớp hết nên ghi lại lệnh này vào bảng lệnh đặt
+			INSERT INTO dbo.LenhDat(MACK, NgayDat, LOAIGD, LoaiLenh, SoLuong, GiaDat, TRANGTHAILENH)
+			VALUES(@InputMaCoPhieu, GETDATE(), @InputLoaiGiaoDich, N'LO', @InputSoLuong, @InputGiaDat, N'Khớp Hết2')
+		END
+		else
+		begin
+		 INSERT INTO dbo.LenhDat(MACK, NgayDat, LOAIGD, LoaiLenh, SoLuong, GiaDat, TRANGTHAILENH)
+			VALUES(@InputMaCoPhieu, GETDATE(), @InputLoaiGiaoDich, N'LO', @InputSoLuong, @InputGiaDat, N'Khớp Một Phẩn2')
+			
+		end
+	CLOSE @CursorVariable 
+	DEALLOCATE @CursorVariable

@@ -1,8 +1,29 @@
+USE [ChungKhoan]
+GO
+/****** Object:  Trigger [dbo].[TRIGGER_LENHDAT]    Script Date: 4/25/2022 7:42:54 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 ALTER TRIGGER [dbo].[TRIGGER_LENHDAT]
 ON [dbo].[LENHDAT]
 AFTER INSERT, UPDATE
 AS
 BEGIN
+   /* declare @Temp1 nvarchar(30) 
+	set @Temp1 = (select TRANGTHAILENH FROM inserted)
+	 declare @Temp2 INT
+	set @Temp2 = (select SOLUONG FROM inserted)
+	 declare @Temp3 FLOAT
+	set @Temp3 = (select GIADAT FROM inserted)
+	 declare @Temp4 INT
+	set @Temp4 = (select ID FROM inserted)
+	
+	if(@Temp1 = N'Khớp Hết2' OR @Temp1 = N'Khớp Một Phẩn2' )
+	begin
+	INSERT INTO dbo.LenhKhop(NgayKhop,SoLuongKhop,GiaKhop,idLenhDat)
+		 VALUES (GETDATE(),@TEMP2,@TEMP3, @TEMP4 )
+	end */
 	IF EXISTS (SELECT MACK 
 			   FROM dbo.BangGiaTrucTuyen 
 			   WHERE MACK = (SELECT MACK FROM inserted))-- nếu có sẵn mã cổ phiếu thì cập nhật giá
@@ -19,7 +40,6 @@ BEGIN
 				@GiaMua3 FLOAT,		-- giá mua cổ phiếu cao thứ 3
 				@SoLuongMua3 INT,	--  số lượng cổ phiếu được mua ở giá cao thứ 3
 
-				
 				@GiaBan1 FLOAT, 	-- giá bán cổ phiếu nhỏ nhất
 				@SoLuongBan1 INT,	-- số lượng cổ phiếu được bán với giá nhỏ nhất
 
@@ -87,8 +107,6 @@ BEGIN
 										GIAMUATHREE = @GiaMua3,
 										KHOILUONGMUATHREE = @SoLuongMua3,
 
-										
-										
 										GIABANONE = @GiaBan1, 
 										KHOILUONGBANONE = @SoLuongBan1,
 
