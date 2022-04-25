@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "eNc8lfAZsv5gcPJtUPTELTJf7WKGyYP8TTXyZo57eOE=",
+  "Hash": "d5KrofFRO7yB7BJtz/JCCKzDj310+0CgLiywGYujFpU=",
   "Source": "WebChungKhoan3.0",
   "BasePath": "_content/WebChungKhoan3.0",
   "Mode": "Default",
@@ -117,23 +117,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
-    },
-    {
-      "Identity": "D:\\Web\\Final ttcs\\WebChungKhoan3.0\\wwwroot\\js\\darkmode.js",
-      "SourceId": "WebChungKhoan3.0",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\Web\\Final ttcs\\WebChungKhoan3.0\\wwwroot\\",
-      "BasePath": "_content/WebChungKhoan3.0",
-      "RelativePath": "js/darkmode.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\js\\darkmode.js"
     },
     {
       "Identity": "D:\\Web\\Final ttcs\\WebChungKhoan3.0\\wwwroot\\js\\Dashhub.js",

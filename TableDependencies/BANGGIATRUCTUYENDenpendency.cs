@@ -13,7 +13,7 @@ namespace WebChungKhoan3._0.TableDependencies
         public BANGGIATRUCTUYENDenpendency(DashBoardHub boardHub)
         {
             this.boardHub = boardHub;
-        }
+        } 
         public void SubscribeTableDenpendency()
         {
             string connectionstr = "Data Source=M15R2;Initial Catalog=ChungKhoan;User ID=TTCS;Password=123";

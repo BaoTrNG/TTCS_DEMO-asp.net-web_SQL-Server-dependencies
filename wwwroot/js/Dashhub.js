@@ -1,4 +1,4 @@
-﻿alert("test heub")
+﻿alert("")
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/DashBoardHub").build();
 $(function () {

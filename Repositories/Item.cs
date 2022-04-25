@@ -23,9 +23,9 @@ namespace WebChungKhoan3._0.Repositories
             {
                 item = new BANGGIATRUCTUYEN();
                 {
-                    item.MACK = row["MACK"].ToString();    //Console.WriteLine(item.MACK);
+                    item.MACK = row["MACK"].ToString();    
 
-                    item.GIAMUATHREE = row["GIAMUATHREE"].ToString(); // Console.WriteLine(item.GIAMUAthree);
+                    item.GIAMUATHREE = row["GIAMUATHREE"].ToString(); 
                     item.KHOILUONGMUATHREE = row["KHOILUONGMUATHREE"].ToString();
                     
                     item.GIAMUATWO = row["GIAMUATWO"].ToString();
@@ -48,13 +48,7 @@ namespace WebChungKhoan3._0.Repositories
 
                     item.TONGKHOILUONG = row["TONGKHOILUONG"].ToString();
                     
-                   // Console.WriteLine(item.GIAMUA);
-                    //   item.MUA2 = row["MUA2"].ToString();
-                    //  item.MUA1 = row["MUA1"].ToString();
-                  //  item.SOLUONGMUA3 = row["SOLUONGMỦA"].ToString();
-                    
-
-                    //Console.WriteLine(item.MACK);
+     
                 };
                 Items.Add(item);
             }

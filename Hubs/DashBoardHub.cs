@@ -14,7 +14,6 @@ namespace WebChungKhoan3._0.Hubs
         {
             
             var Orders = Item.GetOrder();
-           
             await Clients.All.SendAsync("ReceiveOrder", Orders);
         } 
     }
